@@ -36,12 +36,13 @@ def fid_maximum(fname : str):
 
 maxid = fid_maximum(fname)
 print("The maximum feature id is", maxid)
+fz = np.empty(shape=(maxid+1,1))
+
 
 with open(fname, 'r') as file:
     reader = csv.reader(file)
     # SKip header
     next(reader)
-    fz = np.empty(shape=(maxid+1,1))
     for line in reader:
         t = float(line[0])
         if t<0:
@@ -55,5 +56,7 @@ with open(fname, 'r') as file:
             p_bff = pose.inv().as_matrix() * np.transpose(p)
             np.append(fz[int(line[11+4*i+1])], p_bff[2,3])
 
-    print("Finish recording all the feature depth.")        
+    print("Finish recording all the feature depth.")    
+
+    
 
