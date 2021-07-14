@@ -9,24 +9,55 @@
 using namespace cv;
 // Capture the Image from the webcam
 
-int main(int argc, char** argv)
+
+int main()
 {
+   VideoCapture cap(0);
+   cap.set(CV_CAP_PROP_AUTO_EXPOSURE,0.75);
+  //  cap.set(CV_CAP_PROP_EXPOSURE, 40);
 
-VideoCapture cap(0);
+   Mat save_img;
 
-// Get the frame
-Mat save_img; 
+   cap >> save_img;
 
-cap >> save_img;
+   char Esc = 0;
 
-if(save_img.empty())
-{
-  std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
+   while (Esc != 27 && cap.isOpened()) {        
+    bool Frame = cap.read(save_img);        
+    if (!Frame || save_img.empty()) {       
+        std::cout << "error: frame not read from webcam\n";      
+        break;                                              
+    }
+    // namedWindow("save_img", CV_WINDOW_NORMAL);  
+    imshow("imgOriginal", save_img);            
+    Esc = waitKey(1);
 }
-// Save the frame into a file
-imwrite("test.jpg", save_img); // A JPG FILE IS BEING SAVED
+imwrite("test.jpg",save_img); 
 }
 
+
+// int main(int argc, char** argv)
+// {
+
+// VideoCapture cap(0);
+
+// // Get the frame
+// Mat save_img; 
+// for(;;)
+// {
+// cap >> save_img;
+
+// if(save_img.empty())
+// {
+//   std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
+// }
+// // Save the frame into a file
+// imwrite("test.jpg", save_img); 
+
+// cv::waitKey(1);// A JPG FILE IS BEING SAVED
+// }
+
+// }
 // int main(int argc, char** argv)
 // {
 //     std::cout<<CV_VERSION<<std::endl;
