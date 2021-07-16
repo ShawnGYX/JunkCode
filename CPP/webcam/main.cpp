@@ -4,6 +4,7 @@
 
 #include "opencv2/core.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/calib3d.hpp"
 
 
 using namespace cv;
@@ -12,27 +13,37 @@ using namespace cv;
 
 int main()
 {
-   VideoCapture cap(0);
-   cap.set(CV_CAP_PROP_AUTO_EXPOSURE,0.75);
-  //  cap.set(CV_CAP_PROP_EXPOSURE, 40);
+    VideoCapture cap(0);
+    cap.set(CV_CAP_PROP_AUTO_EXPOSURE,0.75);
+    //  cap.set(CV_CAP_PROP_EXPOSURE, 40);
+    float k[9] = {550.2499495823959, 0.0, 634.970638005679, 0.0, 548.8753588860187, 381.1055873002101, 0.0, 0.0, 1.0}; 
+    float d[4] = {-0.03584706281933589, 0.0077362868057236946,-0.04587986231938219, 0.04834004050933801};
+    Mat save_img;
+    Mat undistorted;
 
-   Mat save_img;
+    cv::Mat K_coef = cv::Mat(3, 3, CV_32F, k);
+    cv::Mat D_coef = cv::Mat(1, 4, CV_32F, d);
 
-   cap >> save_img;
+    cap >> save_img;
 
-   char Esc = 0;
+    
 
-   while (Esc != 27 && cap.isOpened()) {        
-    bool Frame = cap.read(save_img);        
-    if (!Frame || save_img.empty()) {       
-        std::cout << "error: frame not read from webcam\n";      
-        break;                                              
-    }
-    // namedWindow("save_img", CV_WINDOW_NORMAL);  
-    imshow("imgOriginal", save_img);            
-    Esc = waitKey(1);
+    char Esc = 0;
+
+    while (Esc != 27 && cap.isOpened()) {        
+        bool Frame = cap.read(save_img);        
+        if (!Frame || save_img.empty()) {       
+            std::cout << "error: frame not read from webcam\n";      
+            break;                                              
+        }
+        // namedWindow("save_img", CV_WINDOW_NORMAL);  
+        imshow("imgOriginal", save_img);  
+        cv::fisheye::undistortImage(save_img, undistorted, K_coef, D_coef);
+        imwrite("test.jpg", undistorted);
+
+        Esc = waitKey(1);
 }
-imwrite("test.jpg",save_img); 
+// imwrite("test.jpg",save_img); 
 }
 
 
