@@ -2,6 +2,14 @@ import cv2
 import numpy as np
 import os
 import glob
+import argparse
+
+
+parser = argparse.ArgumentParser(description="Calibrate fisheye camera using recorded frames.")
+parser.add_argument('folder_name', metavar='f', nargs='+',
+                    type=str, help="The folder with image(s) used for calibration.")
+args = parser.parse_args()
+
 CHECKERBOARD = (7,9)
 subpix_criteria = (cv2.TERM_CRITERIA_EPS+cv2.TERM_CRITERIA_MAX_ITER, 30, 0.1)
 calibration_flags = cv2.fisheye.CALIB_RECOMPUTE_EXTRINSIC+cv2.fisheye.CALIB_CHECK_COND+cv2.fisheye.CALIB_FIX_SKEW
@@ -10,7 +18,9 @@ objp[0,:,:2] = np.mgrid[0:CHECKERBOARD[0], 0:CHECKERBOARD[1]].T.reshape(-1, 2)
 _img_shape = None
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
-images = glob.glob('*.jpg')
+images = glob.glob(args.folder_name + '/*.jpg')
+
+
 for fname in images:
     img = cv2.imread(fname)
     if _img_shape == None:
