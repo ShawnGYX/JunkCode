@@ -9,6 +9,8 @@ import pandas as pd
 import numpy as np
 
 
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Convert an ArduPilot VIO dataset into a HDF5 file.")
     parser.add_argument("Directory", metavar='d', help="The directory containing the VIO dataset in traditional format.")
