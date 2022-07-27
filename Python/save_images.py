@@ -15,6 +15,8 @@ cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25) #means manual
 
 exposure = 0.5 # Indoor initial value
 gain = 1e-4
+# Control camera exposure
+cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
 
 ret, frame = cap.read()
 
@@ -27,17 +29,16 @@ while(True):
         continue
     
     frame_count += 1
-    cv2.imshow('frame',frame)
-    cv2.imwrite(cam_cap_dir+"/{}.jpg".format(frame_count))
-    # Control camera exposure
-    cap.set(cv2.CAP_PROP_EXPOSURE, exposure)
-    img_mean = np.mean(frame)
+    # cv2.imshow('frame',frame)
+    cv2.imwrite(cam_cap_dir+"/{}.jpg".format(frame_count),frame)
 
-    if img_mean > 128-32 and img_mean < 128+32:
-        continue
+    # img_mean = np.mean(frame)
 
-    exposure += gain * (128 - img_mean) * exposure
-    if exposure > 0.7:
-        exposure = 0.7
-    elif exposure <= 0.0:
-        exposure = 1e-6
+    # if img_mean > 128-32 and img_mean < 128+32:
+    #     continue
+
+    # exposure += gain * (128 - img_mean) * exposure
+    # if exposure > 0.7:
+    #     exposure = 0.7
+    # elif exposure <= 0.0:
+    #     exposure = 1e-6
