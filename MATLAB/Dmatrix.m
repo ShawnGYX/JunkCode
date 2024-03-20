@@ -34,6 +34,35 @@ f2(1:3,4) = S*a'*dt*dt;
 disp(f1);
 disp(f2);
 
+
+
+%%
+
+omega = rand(1,3);
+a = rand(1,3);
+b = rand(1,3);
+U = zeros(5);
+
+G = zeros(5);
+G(3,5) = -9.81;
+
+ox = skew(omega);
+% oxt = ox*dt;
+U(1:3,1:3) = ox;
+U(1:3,5) = a;
+U(1:3,4) = b;
+D = zeros(5);
+D(5,4) = 1;
+
+Delta = U;
+
+t = 1;
+
+update_test = expm(0.5*Delta)*expm(0.5*(G-D))*expm(0.5*Delta)*expm(0.5*(G-D));
+update_normal = expm(Delta)*expm(G-D);
+
+
+
 function x_skew = skew(x)
     x_skew = [0,-x(3),x(2);...
         x(3),0,-x(1);...
